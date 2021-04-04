@@ -87,7 +87,7 @@ class ParsedBean {
           ParsedBean(bean.element, doRelations: false, doAssociation: false)
               .detect();
 
-      final Preload other = info.findHasXByAssociation(clazz.type);
+      final Preload other = info.findHasXByAssociation(clazz.thisType);
 
       if (other == null) continue;
 
@@ -127,7 +127,7 @@ class ParsedBean {
         final WriterModel info =
             ParsedBean(bean.element, doRelations: false, doAssociation: false)
                 .detect();
-        final Preload other = info.findHasXByAssociation(clazz.type);
+        final Preload other = info.findHasXByAssociation(clazz.thisType);
         if (other != null) continue;
       }
 
@@ -213,7 +213,7 @@ class ParsedBean {
 
     if (doRelations) {
       for (Preload p in preloads) {
-        if (p.bean == clazz.type) {
+        if (p.bean == clazz.thisType) {
           p.foreignFields.addAll(beanedAssociations[p.bean].fields);
         }
         for (Field f in p.foreignFields) {
@@ -230,7 +230,7 @@ class ParsedBean {
 
   /// Parses and populates [model] and [reader]
   void _getModel() {
-    if (!isBean.isAssignableFromType(clazz.type)) {
+    if (!isBean.isAssignableFromType(clazz.thisType)) {
       throw Exception("Beans must implement Bean interface!");
     }
 
@@ -271,7 +271,7 @@ class ParsedBean {
         relations.add(fieldName);
 
         final DartObject spec = cols[name];
-        parseRelation(clazz.type, field, spec);
+        parseRelation(clazz.thisType, field, spec);
       }
     }
 
@@ -331,7 +331,7 @@ class ParsedBean {
           fields[val.field] = val;
           if (val.isPrimary) primaries.add(val);
         } else {
-          if (!_relation(clazz.type, field)) {
+          if (!_relation(clazz.thisType, field)) {
             final vf = Field(field.type.name, field.name, field.name,
                 unique: null,
                 length: null,
